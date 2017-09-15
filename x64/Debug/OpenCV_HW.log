@@ -1,0 +1,4 @@
+﻿  HW01_Part3_main.cpp
+c:\users\tete\documents\visual studio 2017\projects\opencv_hw\opencv_hw\hw01_part3_main.cpp(58): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  OpenCV_HW.vcxproj -> C:\Users\TETE\Documents\Visual Studio 2017\Projects\OpenCV_HW\x64\Debug\OpenCV_HW.exe
+  OpenCV_HW.vcxproj -> C:\Users\TETE\Documents\Visual Studio 2017\Projects\OpenCV_HW\x64\Debug\OpenCV_HW.pdb (Partial PDB)

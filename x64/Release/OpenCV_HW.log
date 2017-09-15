@@ -1,0 +1,7 @@
+﻿  HW01_Part3_main.cpp
+HW01_Part3_main.cpp(58): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  Generating code
+  All 331 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  OpenCV_HW.vcxproj -> C:\Users\TETE\Documents\Visual Studio 2017\Projects\OpenCV_HW\x64\Release\OpenCV_HW.exe
+  OpenCV_HW.vcxproj -> C:\Users\TETE\Documents\Visual Studio 2017\Projects\OpenCV_HW\x64\Release\OpenCV_HW.pdb (Full PDB)
