@@ -6,7 +6,7 @@ int main()
 {
 	Mat bg_im, image, bg_im_gray, image_gray, diff_im, bw;
 	double th = -1;
-	bg_im = imread("C:/Users/TETE/Desktop/Basketball2_frame/basketball2_frame_0001.bmp", IMREAD_COLOR);
+	bg_im = imread("C:/Users/1803/Desktop/CV_HW/CV_HW1/images/Basketball2_frame/basketball2_frame_0001.bmp", IMREAD_COLOR);
 	cvtColor(bg_im, bg_im_gray, COLOR_BGR2GRAY);
 	namedWindow("BG", 1);
 	namedWindow("Image", 1);
@@ -18,21 +18,23 @@ int main()
 	{
 		char filename[200];
 
-		sprintf_s(filename, "C:/Users/TETE/Desktop/Basketball2_frame/basketball2_frame_%04d.bmp", i);
+		sprintf_s(filename, "C:/Users/1803/Desktop/CV_HW/CV_HW1/images/Basketball2_frame/basketball2_frame_%04d.bmp", i);
 		image = imread(filename);
 		cvtColor(image, image_gray, COLOR_BGR2GRAY);
 		cv::absdiff(bg_im_gray, image_gray, diff_im);;
 		threshold(diff_im, bw, th, 255, THRESH_BINARY | THRESH_OTSU);
 		// Your Code to detect the ball
 		Mat hls;
+		// แปลงภาพเป็น HLS
 		cvtColor(image, hls, COLOR_BGR2HLS);
 
 		Mat SE(15, 15, CV_8U, Scalar(1));
 		Mat opened_image;
+		// ลดจำนวนจุดเล็กบนภาพ binary image โดยใช้การ DILATE
 		morphologyEx(bw, opened_image, MORPH_DILATE, SE);
 
 		vector<vector<Point2i>>  contours;
-			
+		// หา Contours ในภาพเพื่อแยกวัตถุกับภาพพื้นหลัง
 		findContours(opened_image, contours, RETR_EXTERNAL, CHAIN_APPROX_NONE);
 
 		for (size_t i = 0; i < contours.size(); i++)
@@ -44,14 +46,20 @@ int main()
 
 			int area = bb.width * bb.height;
 
+			//แสดงขนาดพื้นที่ของ bouning rect
 			putText(opened_image, to_string(area), contours[i][0], 1, 1,Scalar(255,255,255));
+
+			//ถ้าขนาดพื้นที่ไม่อยู่ใน range จะไม่นำมาพิจารณาว่าเป็นลูกบอล
 			if (360<area && area< 1200) {
 				int avg_hue = 0;
 				int ball_area = 0;
+				//วนแต่ละ pixel ใน bouning box ของ แต่ละ contours
 				for (size_t y = 0; y < bb.height; y++) 
 				{
 					for (size_t x = 0; x < bb.width; x++)
 					{
+						//ตรวจสอบว่า pixel อยู่ใน contour หรือไม่
+						//ถ้าใช่ให้นำ pixel ไปหาค่าเฉลี่ยสี;
 						double inside = pointPolygonTest(contours[i], Point2f(float(x + sx), float(y + sy)), false);
 						if (inside >= 0) {		
 							ball_area++;
@@ -61,9 +69,12 @@ int main()
 
 					}
 				} 
+				//หาค่าเฉลี่ยสี hue
 				avg_hue = avg_hue / ball_area;
 
+				//ถ้าสีอยู่ในช่วงที่กำหนดจะให้ contours นั้นเป็นลูกบอล
 				if (avg_hue > 35 && cy < 370) {
+					// สร้าง mark ต่างๆรอบลูกบอล , 
 					cvtColor(opened_image, opened_image, COLOR_GRAY2BGR);
 					putText(opened_image, to_string(avg_hue), contours[i][contours[i].size()/2], 1, 1, Scalar(0, 0, 255));
 					putText(image, "Ball", contours[i][0], 1, 1, Scalar(0, 0, 255));
@@ -84,7 +95,7 @@ int main()
 		
 
 		waitKey(0);
-		if (i == 100)i = 2;
+		//if (i == 100)i = 2;
 	}
 	destroyAllWindows();
 	return 0;
